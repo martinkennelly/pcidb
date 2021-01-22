@@ -63,7 +63,13 @@ func ensureDir(fp string) error {
 func cacheDBFile(cacheFilePath string) error {
 	ensureDir(cacheFilePath)
 
-	response, err := http.Get(PCIIDS_URI)
+	client := new(http.Client)
+	request, err := http.NewRequest("GET", PCIIDS_URI, nil)
+	if err != nil {
+		return err
+	}
+	request.Header.Set("User-Agent", "golang-jaypipes-pcidb")
+	response, err := client.Do(request)
 	if err != nil {
 		return err
 	}
